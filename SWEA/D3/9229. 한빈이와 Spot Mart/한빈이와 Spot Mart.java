@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
+
 public class Solution {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,7 +22,8 @@ public class Solution {
 				bags[i] = Integer.parseInt(st.nextToken());
 			}
 			Arrays.sort(bags);
-				
+			
+			// 투포인터
 			int start = 0;
 			int end = N-1;
 			int sum; // 
@@ -29,16 +31,16 @@ public class Solution {
 			while(start < end) {
 				sum = bags[start] + bags[end];
 				if(sum <= M) {
-					if(sum == M) {
+					if(sum == M) { // 합이 M 같다면 종료한다
 						max = M;
 						break;
 					}
-					if(sum > max)
+					if(sum > max) // 합이 max보다 크다면 max 업데이트 
 						max = sum;
-					++start;
+					++start; // 아직 sum이 M보다 작으므로 좌측 포인터를 우측으로 민다.
 				}
 				else {
-					--end;
+					--end; // sum이 M보다 크므로 우측 포인터를 좌측으로 민다.
 				}
 				
 			}
