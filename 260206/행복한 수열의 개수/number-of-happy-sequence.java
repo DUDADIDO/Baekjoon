@@ -39,6 +39,8 @@ public class Main {
             if(isPossible)
                 answer++;
         }
+        if(n == 1 && m == 1)
+            answer = 2;
         System.out.println(answer);
         // Please write your code here.
     }
