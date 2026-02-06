@@ -1,3 +1,5 @@
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,33 +18,30 @@ public class Solution {
 			st = new StringTokenizer(br.readLine());
 			N = Integer.parseInt(st.nextToken());
 			L = Integer.parseInt(st.nextToken());
-			
 			kcal = new int[N];
 			scores = new int[N];
+			maxScore = 0;
 			
 			for(int i=0; i<N; i++) {
 				st = new StringTokenizer(br.readLine());
 				scores[i] = Integer.parseInt(st.nextToken());
 				kcal[i] = Integer.parseInt(st.nextToken());
 			}
-			maxScore = 0;
-			dfs(0, 0, 0);
-			sb.append(maxScore).append("\n");
 			
+			dfs(0, 0, 0, 0);
+			sb.append(maxScore).append("\n");
 		}
 		System.out.println(sb);
-
 	}
-	static void dfs(int idx, int scoreSum, int kcalSum) {
+	static void dfs(int idx, int start, int scoreSum, int kcalSum) {
 		if(kcalSum > L)
 			return;
-		if(idx == N) {
-			maxScore = Math.max(scoreSum, maxScore);
-			return;
+		maxScore = Math.max(scoreSum, maxScore);
+		for(int i=start; i<N; i++) {
+			dfs(idx+1, i+1, scoreSum+scores[i], kcalSum+kcal[i]); // 고름
 		}
 		
-		dfs(idx+1, scoreSum+scores[idx], kcalSum+kcal[idx]); // 고름
-		dfs(idx+1, scoreSum, kcalSum); // 고르지 않음
+
 		
 	}
 }
