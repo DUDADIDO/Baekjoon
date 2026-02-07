@@ -15,6 +15,7 @@ public class Main {
         }
 
         combi(0, k, n);
+        System.out.print(sb);
     }
     static void combi(int L, int k, int n) {
         if(L == n) {
