@@ -29,42 +29,33 @@ public class Solution {
 				}
 			}
 
-			combi(0, 0);
+			combi(1, 1, 1 << 0);
 			sb.append(min).append("\n");
 		}
 		System.out.println(sb);
 	}
-	static void combi(int L, int start) {
+	static void combi(int L, int start, int mask) {
 		if(L == N/2) {
-			calc();
+			calc(mask);
 			return;
 		}
 		
 		for(int i=start; i<N; i++) {
-			selected[i] = true;
-			combi(L+1, i+1);
-			selected[i] = false;
+			combi(L+1, i+1, mask | (1 << i));
 		}
 		
 	}
-	static void calc() {
-		List<Integer> food1 = new ArrayList<>();
-		List<Integer> food2 = new ArrayList<>();
-		for(int i=0; i<N; i++) {
-			if(selected[i])
-				food1.add(i);
-			else
-				food2.add(i);
-		}
+	static void calc(int mask) {
 		int food1Sum = 0;
 		int food2Sum = 0;
-		for(int i=0; i<N/2; i++) {
-			for(int j=0; j<N/2; j++) {
-				if(i == j) {
-					continue;
+		for(int i=0; i<N; i++) {
+			for(int j=0; j<N; j++) {
+				if((mask & (1 << i)) != 0 && ((mask & (1 << j)) != 0)) {
+					food1Sum += map[i][j];
 				}
-				food1Sum += map[food1.get(i)][food1.get(j)];
-				food2Sum += map[food2.get(i)][food2.get(j)];
+				else if((mask & (1 << i)) == 0 && ((mask & (1 << j)) == 0)) {
+					food2Sum += map[i][j];
+				}
 			}
 		}
 		int gap = Math.abs(food1Sum - food2Sum);
