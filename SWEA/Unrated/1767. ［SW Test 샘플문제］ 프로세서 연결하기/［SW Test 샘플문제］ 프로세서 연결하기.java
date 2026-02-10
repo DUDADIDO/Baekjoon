@@ -42,7 +42,7 @@ public class Solution {
 		System.out.println(sb);
 	}
 	static void connect(int proNum, int wireSum, int coreCnt) {
-
+		if (coreCnt + (processNum - proNum) < maxProSum) return;
 		if(proNum == processNum) {
 			if(coreCnt > maxProSum)  {
 				minWireSum = wireSum;
