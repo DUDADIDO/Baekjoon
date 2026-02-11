@@ -28,7 +28,7 @@ public class Main {
             	}
             }
         }
-        for(int k=0; k<=(n/2)+1; k++) { // k의 크기를 정하고
+        for(int k=0; k<=n+1; k++) { // k의 크기를 정하고
         	for(int i=0; i<n; i++) {
         		for(int j=0; j<n; j++) {
         			int cost = (k*k + (int)Math.pow((k+1), 2)) * -1;
