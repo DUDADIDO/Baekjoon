@@ -39,49 +39,29 @@ public class Solution {
 			list.sort((o1, o2) -> {
 				return o1.roomNum - o2.roomNum;
 			}); 
-			int maxCnt = Integer.MIN_VALUE;
-			int maxRoom = 0;
-			int start = 0;
-			int end = start + 1;
-			int cur = 0;
-			int straight = 1;
-			for(int i=0; i<list.size(); i++) {
-				if(end == n*n)
-					break;
-				int curR = list.get(cur).r;
-				int curC = list.get(cur).c;
-				int curNum = list.get(cur).roomNum;
-				int nextR = list.get(end).r;
-				int nextC = list.get(end).c;
-				int nextNum = list.get(end).roomNum;
-				if(curNum+1 == nextNum) {
-					int distance = Math.abs(curR - nextR) + Math.abs(curC - nextC);
-					if(distance == 1) {
-						end++;
-						cur++;
-						straight++;
-						if(straight > maxCnt) {
-							maxCnt = straight;
-							maxRoom = start;
-						}
-					}
-					else {
-						cur = start = end;
-						end = start+1;
-						straight = 1;
-					}
+			int maxStraight = Integer.MIN_VALUE;
+			int maxRoomNum = 0;
+			int currentStart = list.get(0).roomNum;
+			int currentStraight = 1;
+			for(int i=0; i<list.size()-1; i++) {
+				Room cur = list.get(i);
+				Room next = list.get(i+1);
+				int dist = Math.abs(cur.r - next.r) + Math.abs(cur.c - next.c); 
+				if(cur.roomNum+1 == next.roomNum && dist == 1) {
+					currentStraight++;
 				}
 				else {
-					cur = start = end;
-					end = start+1;
-					straight = 1;
+					currentStraight = 1;
+					currentStart = next.roomNum;
 				}
+				
+				if(currentStraight > maxStraight) {
+					maxRoomNum = currentStart;
+					maxStraight = currentStraight 	;
+				}
+				
 			}
-			if(straight > maxCnt) {
-				maxCnt = straight;
-				maxRoom = start;
-			}
-			sb.append(maxRoom+1).append(" ").append(maxCnt).append("\n");
+			sb.append(maxRoomNum).append(" ").append(maxStraight).append("\n");
 		}
 		System.out.println(sb);
 	}
