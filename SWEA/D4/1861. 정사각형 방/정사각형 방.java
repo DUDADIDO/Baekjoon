@@ -25,7 +25,7 @@ public class Solution {
 		for(int tc=1; tc<=T; tc++) {
 			sb.append("#").append(tc).append(" ");
 			int n = Integer.parseInt(br.readLine());
-			List<Room> list = new ArrayList<>();
+			Room[] rooms = new Room[n*n + 1];
 			
 			for(int i=0; i<n; i++) {
 				st = new StringTokenizer(br.readLine());
@@ -33,19 +33,17 @@ public class Solution {
 					int roomNum = Integer.parseInt(st.nextToken());
 					int r = i;
 					int c = j;
-					list.add(new Room(roomNum, r, c));
+					rooms[roomNum] = new Room(roomNum, r, c);
 				}
 			}
-			list.sort((o1, o2) -> {
-				return o1.roomNum - o2.roomNum;
-			}); 
+
 			int maxStraight = Integer.MIN_VALUE;
-			int maxRoomNum = 0;
-			int currentStart = list.get(0).roomNum;
+			int maxRoomNum = 1;
+			int currentStart = rooms[1].roomNum;
 			int currentStraight = 1;
-			for(int i=0; i<list.size()-1; i++) {
-				Room cur = list.get(i);
-				Room next = list.get(i+1);
+			for(int i=1; i<rooms.length-1; i++) {
+				Room cur = rooms[i];
+				Room next = rooms[i+1];
 				int dist = Math.abs(cur.r - next.r) + Math.abs(cur.c - next.c); 
 				if(cur.roomNum+1 == next.roomNum && dist == 1) {
 					currentStraight++;
