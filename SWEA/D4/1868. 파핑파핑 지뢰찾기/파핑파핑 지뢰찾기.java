@@ -31,9 +31,10 @@ public class Solution {
 			cnt = 0;
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					if (map[i][j] == '.' && !visited[i][j])
+					if (map[i][j] == '.' && !visited[i][j] && isZero(i, j)) {
+						cnt++;
 						bfs(i, j);
-
+					}
 				}
 			}
 			for (int i = 0; i < n; i++) {
@@ -48,48 +49,37 @@ public class Solution {
 	}
 
 	static void bfs(int r, int c) {
-		for (int d = 0; d < 8; d++) {
-			int nr = r + dr[d];
-			int nc = c + dc[d];
-
-			if (nr < 0 || nr >= n || nc < 0 || nc >= n)
-				continue;
-			if (map[nr][nc] == '*')
-				return;
-		}
-//		System.out.println("통과요 r: " + r + ", c: " + c);
-		cnt++;
 		Queue<int[]> q = new LinkedList<>();
 		visited[r][c] = true;
 		q.offer(new int[] { r, c });
-		List<int[]> list = new ArrayList<>();
 		while (!q.isEmpty()) {
 			int[] cur = q.poll();
 			int cr = cur[0];
 			int cc = cur[1];
-//			System.out.println("r: " + cr + ", c: " + cc);
-			boolean flag = false;
+			if (!isZero(cr, cc))
+				continue;
 			for (int d = 0; d < 8; d++) {
 				int nr = cr + dr[d];
 				int nc = cc + dc[d];
-				if (nr < 0 || nr >= n || nc < 0 || nc >= n || visited[nr][nc])
+				if (nr < 0 || nr >= n || nc < 0 || nc >= n)
 					continue;
-				if (map[nr][nc] == '*') {
-					flag = true;
-					break;
-				}
-				
-				list.add(new int[] { nr, nc });
+				if (visited[nr][nc])
+					continue;
+				q.offer(new int[] { nr, nc });
+				visited[nr][nc] = true;
 			}
-			if (!flag) {
-				for (int[] tmp : list) {
-					visited[tmp[0]][tmp[1]] = true;
-					q.offer(new int[] { tmp[0], tmp[1] });
-				}
-			}
-			list.clear();
 		}
-
 	}
 
+	static boolean isZero(int r, int c) {
+		for (int d = 0; d < 8; d++) {
+			int nr = r + dr[d];
+			int nc = c + dc[d];
+			if (nr < 0 || nr >= n || nc < 0 || nc >= n)
+				continue;
+			if (map[nr][nc] == '*')
+				return false;
+		}
+		return true;
+	}
 }
