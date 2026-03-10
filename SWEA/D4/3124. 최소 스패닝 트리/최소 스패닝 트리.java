@@ -73,12 +73,12 @@ public class Solution {
 		int rootB = find(b);
 		if(rootA == rootB) return false;
 		
-		if(parents[rootA] > parents[rootB]) {
-			int tmp = rootA;
-			rootA = rootB;
-			rootB = tmp;
-		}
-		parents[rootA] += parents[rootB];
+//		if(parents[rootA] > parents[rootB]) {
+//			int tmp = rootA;
+//			rootA = rootB;
+//			rootB = tmp;
+//		}
+//		parents[rootA] += parents[rootB];
 		parents[rootB] = rootA;
 		return true;
 	}
