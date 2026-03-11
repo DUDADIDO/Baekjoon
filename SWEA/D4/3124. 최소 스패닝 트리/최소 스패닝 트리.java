@@ -54,6 +54,8 @@ public class Solution {
 		int count = 0;
 		long result = 0;
 		boolean[] visited = new boolean[v+1];
+		int[] minDist = new int[v+1];
+		Arrays.fill(minDist, Integer.MAX_VALUE);
 		visited[start] = true;
 		PriorityQueue<Edge> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.weight, o2.weight));
 		for(Edge edge : graph.get(start)) pq.offer(edge);
@@ -66,7 +68,12 @@ public class Solution {
 			visited[cur.target] = true;
 			count++;
 			result += cur.weight;
-			for(Edge edge : graph.get(cur.target)) pq.offer(edge);
+			for(Edge edge : graph.get(cur.target)) {
+				if(!visited[edge.target] && edge.weight < minDist[edge.target]) {
+					minDist[edge.target]= edge.weight;
+					pq.offer(edge);
+				}
+			}
 			
 			if(count == v-1) return result; 
 		}
