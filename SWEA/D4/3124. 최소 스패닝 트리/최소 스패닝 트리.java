@@ -1,28 +1,24 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
+//메모리: , 실행시간:  ms
 public class Solution {
-	static class Edge implements Comparable<Edge> {
-		int start, target, weight;
+	static class Edge {
+		int target, weight;
 		
-		public Edge(int start, int target, int weight) {
+		public Edge(int target, int weight) {
 			super();
-			this.start = start;
 			this.target = target;
 			this.weight = weight;
-		}
-
-		@Override
-		public int compareTo(Edge o) {
-			return Integer.compare(this.weight, o.weight);
-		}
-		
+		}	
 	}
-	static int[] parents;
-	static Edge[] edges;
+	static List<List<Edge>> graph;
 	static int v;
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -36,55 +32,45 @@ public class Solution {
 			st = new StringTokenizer(br.readLine());
 			v = Integer.parseInt(st.nextToken());
 			int e = Integer.parseInt(st.nextToken());
-			edges = new Edge[e];
-			parents = new int[v+1];
-			Arrays.fill(parents, -1);
-			parents[0] = 0;
+			graph = new ArrayList<>();
+			for(int i=0; i<=v; i++) {
+				graph.add(new ArrayList<>());
+			}
 			for(int i=0; i<e; i++) {
 				st = new StringTokenizer(br.readLine());
 				int start = Integer.parseInt(st.nextToken());
 				int target = Integer.parseInt(st.nextToken());
 				int weight = Integer.parseInt(st.nextToken());
 				
-				edges[i] = new Edge(start, target, weight);
+				graph.get(start).add(new Edge(target, weight));
+				graph.get(target).add(new Edge(start, weight));
 			}
-			sb.append(kruskal()).append("\n");
+			sb.append(prim(1)).append("\n");
 			
 		}
 		System.out.println(sb);
 	}
-	static long kruskal() {
-		long result = 0;
+	static long prim(int start) {
 		int count = 0;
-		Arrays.sort(edges);
+		long result = 0;
+		boolean[] visited = new boolean[v+1];
+		visited[start] = true;
+		PriorityQueue<Edge> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1.weight, o2.weight));
+		for(Edge edge : graph.get(start)) pq.offer(edge);
 		
-		for(Edge edge : edges) {
-			boolean unionResult = union(edge.start, edge.target);
-			if(!unionResult) continue;
-			result += edge.weight;
-			count++;
+		while(!pq.isEmpty()) {
+			Edge cur = pq.poll();
 			
-			if(count == v-1) return result;
+			if(visited[cur.target]) continue;
+			
+			visited[cur.target] = true;
+			count++;
+			result += cur.weight;
+			for(Edge edge : graph.get(cur.target)) pq.offer(edge);
+			
+			if(count == v-1) return result; 
 		}
 		return -1;
-	}
-	static boolean union(int a, int b) {
-		int rootA = find(a);
-		int rootB = find(b);
-		if(rootA == rootB) return false;
-		
-//		if(parents[rootA] > parents[rootB]) {
-//			int tmp = rootA;
-//			rootA = rootB;
-//			rootB = tmp;
-//		}
-//		parents[rootA] += parents[rootB];
-		parents[rootB] = rootA;
-		return true;
-	}
-	static int find(int a) {
-		if(parents[a] < 0) return a;
-		return parents[a] = find(parents[a]);
 	}
 
 }
