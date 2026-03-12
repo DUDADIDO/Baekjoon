@@ -32,13 +32,15 @@ public class Solution {
 					map[r][c] = Integer.parseInt(st.nextToken());
 				}
 			}
-			dfs(0);
+			dfs(0, map);
 			sb.append(minBlock).append("\n");
 		}
 		System.out.println(sb);
 	}
 
-	static void dfs(int L) {
+	static void dfs(int L, int[][] currentMap) {
+		if(minBlock == 0) return;
+		
 		if (L == n) {
 
 			/*
@@ -52,42 +54,60 @@ public class Solution {
 			 * 
 			 * 나와서 중력 영향으로 아래로 밀기
 			 */
-			int result = solve();
-			minBlock = Math.min(result, minBlock);
+
+			int cnt = 0;
+			for(int r=0; r<h; r++) {
+				for(int c=0; c<w; c++) {
+					if(currentMap[r][c] > 0)cnt++;
+				}
+			}
+			minBlock = Math.min(cnt, minBlock);
 			return;
 		}
 
 		for (int i = 0; i < w; i++) {
-			result[L] = i;
-			dfs(L + 1);
+			if(minBlock == 0) return;
+			int[][] nextMap = copyMap(currentMap);
+			
+			solve(i, nextMap);
+			dfs(L + 1, nextMap);
 		}
 
 	}
 
-	static int[][] copyMap() {
+	static int[][] copyMap(int[][] currentMap) {
 		int[][] tmp = new int[15][12];
 		for (int i = 0; i < 15; i++) {
-			tmp[i] = map[i].clone();
+			tmp[i] = currentMap[i].clone();
 		}
 		return tmp;
 	}
 
-	static int solve() {
-		int[][] tmpMap = copyMap();
-		Queue<int[]> q = new LinkedList<>();
-		for(int i=0; i<n; i++) {
-			int bombCol = result[i];
-			for(int j=0; j<h; j++) {
-				if (tmpMap[j][bombCol] == 1) { // 폭발 크기가 1이면 자기만 터지고 끝
-					tmpMap[j][bombCol] = 0;
-					break;
-				}
-				else if(tmpMap[j][bombCol] > 1) {
-					q.offer(new int[] {j, bombCol, tmpMap[j][bombCol]});
-					tmpMap[j][bombCol] = 0;
-					break;
-				}
+	static void solve(int col, int[][] tmpMap) {
+		int startR = -1;
+		for(int j=0; j<h; j++) {
+			if (tmpMap[j][col] > 0) {
+				startR = j;
+				break;
 			}
+		}
+		if(startR == -1) return;
+		Queue<int[]> q = new LinkedList<>();
+		q.offer(new int[] {startR, col, tmpMap[startR][col]});
+		tmpMap[startR][col] = 0;
+//		for(int i=0; i<n; i++) {
+//			int bombCol = result[i];
+//			for(int j=0; j<h; j++) {
+//				if (tmpMap[j][bombCol] == 1) { // 폭발 크기가 1이면 자기만 터지고 끝
+//					tmpMap[j][bombCol] = 0;
+//					break;
+//				}
+//				else if(tmpMap[j][bombCol] > 1) {
+//					q.offer(new int[] {j, bombCol, tmpMap[j][bombCol]});
+//					tmpMap[j][bombCol] = 0;
+//					break;
+//				}
+//			}
 			while(!q.isEmpty()) {
 				// 연쇄 폭발 처리
 				int[] cur = q.poll();
@@ -122,16 +142,6 @@ public class Solution {
 				}
 			}
 			
-			
-		}
-		int cnt = 0;
-		for(int r=0; r<h; r++) {
-			for(int c=0; c<w; c++) {
-				if(tmpMap[r][c] > 0)cnt++;
-			}
-		}
-		return cnt;
-		// 남은 블록 개수 새서 return
-	}
 
+		}
 }
