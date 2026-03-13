@@ -25,7 +25,7 @@ public class Solution {
 			for(int i=0; i<n; i++) {
 				String input = br.readLine();
 				for(int j=0; j<n; j++) {
-					map[i][j] = Character.getNumericValue(input.charAt(j));
+					map[i][j] = input.charAt(j) - '0';
 				}
 				Arrays.fill(minDist[i], 100000000);
 			}
@@ -40,7 +40,7 @@ public class Solution {
 	static void dijkstra(int r, int c) {
 		minDist[r][c] = 0;
 		PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> Integer.compare(o1[2], o2[2]));
-		pq.offer(new int[] {r, c, map[r][c]});
+		pq.offer(new int[] {r, c, 0});
 		
 		while(!pq.isEmpty()) {
 			int[] cur = pq.poll();
